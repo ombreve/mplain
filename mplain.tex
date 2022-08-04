@@ -1,0 +1,93 @@
+% This is the mplain, Mostly (Modern?) Plain pdfTeX format.
+% The version number and format name is redefined at the end of this file.
+% See mtex.{tex,pdf} for documentation.
+
+% Assume ini mode and set up a minimal \catcode r\'egime.
+\catcode`\{=1 \catcode`\}=2 \catcode`\#=6 \catcode`\^=7 \catcode`@=11
+
+% Ensure we're running pdfTex in extended mode and with enc extension.
+\ifx\pdftexversion\undefined
+  \immediate\write16{ ! fatal error:
+     pdfTeX is required to process this file.}
+  \batchmode\read -1 to \@tmpa
+\fi
+\ifx\numexpr\undefined
+  \immediate\write16{ ! fatal error:
+     extended mode is required to process this file.}
+  \batchmode\read -1 to \@tmpa
+\fi
+\ifx\xprncode\undefined
+  \immediate\write16{ ! fatal error:
+     the 'enc' extension of TeX is required to process this file.}
+  \batchmode\read -1 to \@tmpa
+\fi
+
+% Set pdfTeX basic registers.
+\pdfoutput           = 1
+\pdfminorversion     = 5
+\pdfobjcompresslevel = 2
+\pdfcompresslevel    = 9
+\pdfdecimaldigits    = 3
+\pdfpkresolution     = 600
+\pdfhorigin          = 1 true in
+\pdfvorigin          = 1 true in
+
+% Load the 16 plain.tex fonts in lmodern version.
+\font\tenrm=rm-lmr10
+\font\sevenrm=rm-lmr7
+\font\fiverm=rm-lmr5
+\font\teni=lmmi10
+\font\seveni=lmmi7
+\font\fivei=lmmi5
+\font\tensy=lmsy10
+\font\sevensy=lmsy7
+\font\fivesy=lmsy5
+\font\tenex=lmex10
+\font\tenbf=rm-lmbx10
+\font\sevenbf=rm-lmbx7
+\font\fivebf=rm-lmbx5
+\font\tentt=rm-lmtt10
+\font\tensl=rm-lmro10
+\font\tenit=rm-lmri10
+
+% Load plain.tex, skipping \font directives.
+\def\@tmpa{\begingroup \catcode`\%=12 \catcode13=12 \@tmpb}
+\begingroup
+  \lccode1=13 \lowercase{\gdef\@tmpb#1^^A{\endgroup}}
+\endgroup
+\let\@tmpc=\font \let\font=\@tmpa
+\input plain
+\catcode`@=11
+\let\font=\@tmpc
+
+% Add some useful definitions.
+\long\def\@gobble#1{}
+\long\def\@firstofone#1{#1}
+\long\def\@firstoftwo#1#2{#1}
+\long\def\@secondoftwo#1#2{#2}
+\def\@car#1#2\@nil{#1}
+\def\@cdr#1#2\@nil{#2}
+
+% At this point, we have a plain pdfTeX format with lmodern fonts instead of
+% CM fonts. We modify this plain format, mainly to typeset non english texts.
+\let\otenrm=\tenrm \font\tenrm=ec-lmr10  % lm fonts in T1/ec encoding
+\let\otenbf=\tenbf \font\tenbf=ec-lmbx10
+\let\otentt=\tentt \font\tentt=ec-lmtt10
+\let\otensl=\tensl \font\tensl=ec-lmro10
+\let\otenit=\tenit \font\tenit=ec-lmri10
+\input ec                                % T1/ec encoding for text
+\input u8                                % utf8 input to T1/ec
+\input hy                                % hyphenation patterns
+\input ma                                % fonts and definitions for maths
+\input a4                                % A4 paper format
+\input fr                                % french typography
+
+% Satinize, set format name and version, and dump.
+\let\@tmpa=\undefined \let\@tmpb=\undefined \let\@tmpc=\undefined
+\catcode`@=12
+\rm
+\def\fmtname{mplain (MostlyPlain)}
+\edef\fmtversion{0.577 (plain \fmtversion)}
+\dump
+\endinput
+

@@ -1,0 +1,48 @@
+% Adaptation à quelques usages de la typographie française
+
+% Ponctuations doubles.
+
+\def\dblpspace{\hskip.5\fontdimen2\font\relax}
+\catcode`;=\active
+\def;{\ifhmode\ifdim\lastskip>1sp\unskip\penalty\@M\dblpspace\fi\fi\string;}
+\catcode`!=\active
+\def!{\ifhmode\ifdim\lastskip>1sp\unskip\penalty\@M\dblpspace\fi\fi\string!}
+\catcode`?=\active
+\def?{\ifhmode\ifdim\lastskip>1sp\unskip\penalty\@M\dblpspace\fi\fi\string?}
+\def\colonspace{\space}
+\catcode`:=\active
+\def:{\ifhmode\ifdim\lastskip>1sp\unskip\penalty\@M\colonspace\fi\fi\string:}
+
+% Guillemets
+
+\def\guillspace{\hskip.8\fontdimen2\font
+  plus .3\fontdimen3\font minus .8\fontdimen4\font\relax}
+\def\og{\leavevmode\guillemetleft\penalty\@M\guillspace\ignorespaces}
+\def\fg{\ifdim\lastskip>\z@\unskip\fi\penalty\@M\guillspace\guillemetright}
+
+\mubyte \og ^^c2^^ab\endmubyte         % «
+\mubyte \fg ^^c2^^bb\endmubyte         % »
+\mubyte \og ^^c2^^ab^^c2^^a0\endmubyte % « suivi de nbsp
+\mubyte \fg ^^c2^^a0^^c2^^bb\endmubyte % » précédé de nbsp
+
+% Petites capitales sans césure pour les noms de famille et autres.
+\font\tencsc=ec-lmcsc10
+\def\bsc#1{\hbox{\tencsc #1}}
+
+% Majuscules droites en mode mathématique.
+\begingroup
+  \count0="41
+  \loop
+    \count1=\count0 \advance\count1 by "7000
+    \global\mathcode\count0=\count1
+  \ifnum\count0 < "5A \advance\count0 by \@ne \repeat
+\endgroup
+
+% <= et >=.
+\let\le=\leqslant
+\let\ge=\geqslant
+
+% Césures et espacement français.
+\french \frenchspacing
+
+\endinput

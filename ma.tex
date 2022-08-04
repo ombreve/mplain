@@ -1,0 +1,41 @@
+% Fonts and definitions for mathematics
+
+% Load AMS symbols and Euler fraktur fonts.
+\font\tenmsa    = msam10
+\font\sevenmsa  = msam7
+\font\fivemsa   = msam5
+\font\tenmsb    = msbm10
+\font\sevenmsb  = msbm7
+\font\fivemsb   = msbm5
+\font\teneufm   = eufm10
+\font\seveneufm = eufm7
+\font\fiveeufm  = eufm5
+\newfam\msafam  % "8
+\newfam\msbfam  % "9
+\newfam\eufmfam % "A
+\textfont\msafam          = \tenmsa
+\scriptfont\msafam        = \sevenmsa
+\scriptscriptfont\msafam  = \fivemsa
+\textfont\msbfam          = \tenmsb
+\scriptfont\msbfam        = \sevenmsb
+\scriptscriptfont\msbfam  = \fivemsb
+\textfont\eufmfam         = \teneufm
+\scriptfont\eufmfam       = \seveneufm
+\scriptscriptfont\eufmfam = \fiveeufm
+
+% Some useful symbols
+\mathchardef\leqslant     = "3836
+\mathchardef\geqslant     = "383E
+\mathchardef\subsetneq    = "3928
+\mathchardef\supsetneq    = "3929
+\mathchardef\N            = "094E
+\mathchardef\Z            = "095A
+\mathchardef\D            = "0944
+\mathchardef\Q            = "0951
+\mathchardef\R            = "0952
+\mathchardef\C            = "0943
+
+\def\bbb{\fam\msbfam}
+\def\frak{\fam\eufmfam}
+
+\endinput

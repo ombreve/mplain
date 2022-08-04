@@ -1,0 +1,26 @@
+% Hyphenation patterns.
+
+% Set up english hyphenation patterns (already loaded by plain.tex).
+\chardef\lang@en=\z@
+\def\english{\language=\lang@en
+  \lefthyphenmin=2 \righthyphenmin=3 \lccode`\'=\z@}
+
+% Set up french hyphenation patterns. Note that the patterns are utf8
+% encoded.
+\newlanguage\lang@fr
+\begingroup
+  \language=\lang@fr \lccode`\'=`\'
+  \input hyph-fr
+\endgroup
+\def\french{\language=\lang@fr
+  \lefthyphenmin=2 \righthyphenmin=2 \lccode`\'=`\'}
+
+% Set up a language with no hyphenation.
+\newlanguage\lang@zz
+\begingroup
+  \language=\lang@zz
+  \patterns{}
+\endgroup
+\def\nohyphen{\language=\lang@zz}
+
+\endinput

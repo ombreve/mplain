@@ -1,0 +1,162 @@
+% T1/ec encoding for text.
+
+% \@tmpa#1#2 applies \@tmpc with argument ranging from #1 to #2.
+\begingroup
+\def\@tmpa#1#2{\count0=#1 \count1=#2 \@tmpb}
+\def\@tmpb{\ifnum\count0>\count1\else
+  \@tmpc{\count0}\advance\count0 by \@ne \expandafter\@tmpb\fi}
+
+% Set lccode and uccode for lower case letters.
+\def\@tmpc#1{\count@=#1 \advance\count@ by -"20
+  \global\uccode#1=\count@ \global\lccode#1=#1 }
+\@tmpa{"A0}{"BC}
+\@tmpa{"E0}{"FF}
+
+% Set lccode, uccode and sfcode for upper case letters.
+\def\@tmpc#1{\count@=#1 \advance\count@ by "20
+  \global\uccode#1=#1 \global\lccode#1=\count@ \global\sfcode#1=999 }
+\@tmpa{"80}{"9C}
+\@tmpa{"C0}{"DF}
+\endgroup
+
+% A few remaining lccode and uccode slots need to be set.
+\uccode"19="49 \lccode"19="19 % dotless i
+\uccode"1A="4A \lccode"1A="1A % dotless j
+\lccode"9D="19 \uccode"9D="9D % dotted I
+\lccode"9E="9E \uccode"9E="D0 % d-bar
+\lccode`\-=`\- % default hyphen char
+\lccode"7F="7F % alternate hyphen char
+\lccode"17="17 % compwordmark
+
+% Define text symbols
+\chardef\quotesinglbase =13
+\chardef\guilsinglleft  =14
+\chardef\guilsinglright =15
+\chardef\quotedblleft   =16
+\chardef\quotedblright  =17
+\chardef\quotedblbase   =18
+\chardef\guillemetleft  =19
+\chardef\guillemetright =20
+\chardef\endash         =21
+\chardef\emdash         =22
+\chardef\compwordmark   =23
+\def\perthousand{\%\char 24 }\def\pertenthousand{\%\char 24\char 24 }
+\chardef\i              =25
+\chardef\j              =26
+\chardef\visiblespace   =32
+\chardef\L              =138
+\chardef\NG             =141
+\chardef\IJ             =156
+\chardef\dj             =158
+\chardef\section        =159
+\chardef\l              =170
+\chardef\ng             =173
+\chardef\ij             =188
+\chardef\exclamdown     =189
+\chardef\questiondown   =190
+\chardef\sterling       =191
+\chardef\AA             =197
+\chardef\AE             =198
+\chardef\DH             =208
+\chardef\DJ             =208
+\chardef\OE             =215
+\chardef\O              =216
+\chardef\TH             =222
+\chardef\SS             =223
+\chardef\aa             =229
+\chardef\ae             =230
+\chardef\dh             =240
+\chardef\oe             =247
+\chardef\o              =248
+\chardef\th             =254
+\chardef\ss             =255
+
+% Define accents. Box 0 is used to compute the correct space factor.
+\def\a@def#1#2{\def#1##1{\leavevmode
+  {\setbox\z@\hbox{##1\global\mathchardef\a@sf\spacefactor}\accent#2 ##1}%
+  \ifmmode\else\spacefactor\a@sf\fi}}
+\let\a@sf\relax % just in case accent is first met in an edef
+\a@def{\`}{0}
+\a@def{\'}{1}
+\a@def{\^}{2}
+\a@def{\~}{3}
+\a@def{\"}{4}
+\a@def{\H}{5}
+\a@def{\r}{6}
+\a@def{\v}{7}
+\a@def{\u}{8}
+\a@def{\=}{9}
+\a@def{\.}{10}
+
+% Accents \b, \c, \d (plain.tex) and \k are built by hand.
+\def\b#1{{\o@lign{\relax#1\crcr\hidewidth\sh@ft{-3ex}%
+  \vbox to.2ex{\hbox{\char9}\vss}\hidewidth}}}
+\def\c#1{{\setbox\z@\hbox{#1}\ifdim\ht\z@=1ex\accent11 #1%
+  \else\ooalign{\unhbox\z@\crcr\hidewidth\char11\hidewidth}\fi}}
+\def\k#1{{\ooalign{\null#1\crcr\hidewidth\char12}}}
+
+% Define a composite command, that is, override a command definition for
+% some specific character arguments: \cc@def<cmd><char><newcmd> tests if
+% <cmd> expansion starts with \cc@test and if not, redefine <cmd> to
+% <cmd> -> \cc@test <cmd> \empty \cc@test {<cmd previous expansion>}.
+% Then it defines <cmd>-<char> to expand to <newcmd>.
+\def\cc@def#1#2#3{%
+  \ifx#1\undefined
+    \immediate\write16{ ! error: composite with undeclared \string#1}%
+  \else
+    \expandafter\expandafter\expandafter
+    \ifx\expandafter\@car#1\relax\relax\@nil \cc@test \else
+      \def\@tmpa##1{%
+        \def#1####1{\cc@test #1 ####1\empty\cc@test {##1}}}%
+      \expandafter\@tmpa\expandafter{#1{##1}}%
+    \fi
+  \fi
+  \expandafter\def\csname\string#1-\string#2\empty\endcsname{#3}}
+
+% Execute <cmd>-<char> if defined. The #3 parameter is \empty most of the
+% time and ignored. It is empty in case of calling an accent with no
+% argument.
+\def\cc@test#1#2#3\cc@test{%
+  \expandafter\cc@test@\csname\string#1-\string#2\endcsname}
+\def\cc@test@#1{%
+  \ifx#1\relax\expandafter\@secondoftwo\else\expandafter\@firstoftwo\fi #1}
+
+\cc@def{\u}{A}{^^80} \cc@def{\k}{A}{^^81} \cc@def{\'}{C}{^^82}
+\cc@def{\v}{C}{^^83} \cc@def{\v}{D}{^^84} \cc@def{\v}{E}{^^85}
+\cc@def{\k}{E}{^^86} \cc@def{\u}{G}{^^87} \cc@def{\'}{L}{^^88}
+\cc@def{\v}{L}{^^89} \cc@def{\'}{N}{^^8b} \cc@def{\v}{N}{^^8c}
+\cc@def{\H}{O}{^^8e} \cc@def{\'}{R}{^^8f} \cc@def{\v}{R}{^^90}
+\cc@def{\'}{S}{^^91} \cc@def{\v}{S}{^^92} \cc@def{\c}{S}{^^93}
+\cc@def{\v}{T}{^^94} \cc@def{\c}{T}{^^95} \cc@def{\H}{U}{^^96}
+\cc@def{\r}{U}{^^97} \cc@def{\"}{Y}{^^98} \cc@def{\'}{Z}{^^99}
+\cc@def{\v}{Z}{^^9a} \cc@def{\.}{Z}{^^9b} \cc@def{\.}{I}{^^9d}
+\cc@def{\u}{a}{^^a0} \cc@def{\k}{a}{^^a1} \cc@def{\'}{c}{^^a2}
+\cc@def{\v}{c}{^^a3} \cc@def{\v}{d}{^^a4} \cc@def{\v}{e}{^^a5}
+\cc@def{\k}{e}{^^a6} \cc@def{\u}{g}{^^a7} \cc@def{\'}{l}{^^a8}
+\cc@def{\v}{l}{^^a9} \cc@def{\'}{n}{^^ab} \cc@def{\v}{n}{^^ac}
+\cc@def{\H}{o}{^^ae} \cc@def{\'}{r}{^^af} \cc@def{\v}{r}{^^b0}
+\cc@def{\'}{s}{^^b1} \cc@def{\v}{s}{^^b2} \cc@def{\c}{s}{^^b3}
+\cc@def{\v}{t}{^^b4} \cc@def{\c}{t}{^^b5} \cc@def{\H}{u}{^^b6}
+\cc@def{\r}{u}{^^b7} \cc@def{\"}{y}{^^b8} \cc@def{\'}{z}{^^b9}
+\cc@def{\v}{z}{^^ba} \cc@def{\.}{z}{^^bb} \cc@def{\`}{A}{^^c0}
+\cc@def{\'}{A}{^^c1} \cc@def{\^}{A}{^^c2} \cc@def{\~}{A}{^^c3}
+\cc@def{\"}{A}{^^c4} \cc@def{\r}{A}{^^c5} \cc@def{\c}{C}{^^c7}
+\cc@def{\`}{E}{^^c8} \cc@def{\'}{E}{^^c9} \cc@def{\^}{E}{^^ca}
+\cc@def{\"}{E}{^^cb} \cc@def{\`}{I}{^^cc} \cc@def{\'}{I}{^^cd}
+\cc@def{\^}{I}{^^ce} \cc@def{\"}{I}{^^cf} \cc@def{\~}{N}{^^d1}
+\cc@def{\`}{O}{^^d2} \cc@def{\'}{O}{^^d3} \cc@def{\^}{O}{^^d4}
+\cc@def{\~}{O}{^^d5} \cc@def{\"}{O}{^^d6} \cc@def{\`}{U}{^^d9}
+\cc@def{\'}{U}{^^da} \cc@def{\^}{U}{^^db} \cc@def{\"}{U}{^^dc}
+\cc@def{\'}{Y}{^^dd} \cc@def{\`}{a}{^^e0} \cc@def{\'}{a}{^^e1}
+\cc@def{\^}{a}{^^e2} \cc@def{\~}{a}{^^e3} \cc@def{\"}{a}{^^e4}
+\cc@def{\r}{a}{^^e5} \cc@def{\c}{c}{^^e7} \cc@def{\`}{e}{^^e8}
+\cc@def{\'}{e}{^^e9} \cc@def{\^}{e}{^^ea} \cc@def{\"}{e}{^^eb}
+\cc@def{\`}{i}{^^ec} \cc@def{\`}{\i}{^^ec} \cc@def{\'}{i}{^^ed}
+\cc@def{\'}{\i}{^^ed} \cc@def{\^}{i}{^^ee} \cc@def{\^}{\i}{^^ee}
+\cc@def{\"}{i}{^^ef} \cc@def{\"}{\i}{^^ef} \cc@def{\~}{n}{^^f1}
+\cc@def{\`}{o}{^^f2} \cc@def{\'}{o}{^^f3} \cc@def{\^}{o}{^^f4}
+\cc@def{\~}{o}{^^f5} \cc@def{\"}{o}{^^f6} \cc@def{\`}{u}{^^f9}
+\cc@def{\'}{u}{^^fa} \cc@def{\^}{u}{^^fb} \cc@def{\"}{u}{^^fc}
+\cc@def{\'}{y}{^^fd}
+
+\endinput

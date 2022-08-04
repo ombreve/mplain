@@ -1,0 +1,31 @@
+% A4 paper format.
+
+% Keep the same \hsize as plain, with identical left, right, up and down
+% margins. Note that header and footer are counted in the margins.
+% \hsize = 6.5in => margin = (21-16.51)/2 = 2.245cm
+\hoffset       = -0.295cm % 1in - margin
+\voffset       = -0.295cm % \hoffset
+\vsize         = 25.21cm  % 29.7cm - 2*margin + 0.1in (footer line)
+\dimen\footins = 22.67cm  % \vsize - 1in
+
+% PDF page dimensions
+\pdfpageheight = 297 true mm
+\pdfpagewidth  = 210 true mm
+
+% Adapt \m@g (plain.tex, \magnification).
+\def\m@g{\mag\count@
+  \hsize         = 6.5 true in
+  \vsize         = 25.21 true cm
+  \dimen\footins = 22.67 true cm
+  \ppdfmag@fix\pdfhorigin   \ppdfmag@fix\pdfvorigin
+  \ppdfmag@fix\pdfpagewidth \ppdfmag@fix\pdfpageheight
+}
+\def\ppdfmag@fix#1{#1=\expandafter\ppdfconvert@truept\the#1\relax}%
+\begingroup
+  \catcode`P=12
+  \catcode`T=12
+  \lowercase{%
+\endgroup
+    \def\ppdfconvert@truept#1PT{#1truept}}%
+
+\endinput
