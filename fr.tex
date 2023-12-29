@@ -20,10 +20,12 @@
 \def\og{\leavevmode\guillemetleft\penalty\@M\guillspace\ignorespaces}
 \def\fg{\ifdim\lastskip>\z@\unskip\fi\penalty\@M\guillspace\guillemetright}
 
-\mubyte \og ^^c2^^ab\endmubyte         % «
-\mubyte \fg ^^c2^^bb\endmubyte         % »
-\mubyte \og ^^c2^^ab^^c2^^a0\endmubyte % « suivi de nbsp
-\mubyte \fg ^^c2^^a0^^c2^^bb\endmubyte % » précédé de nbsp
+\mubyte \og ^^c2^^ab\endmubyte             % «
+\mubyte \fg ^^c2^^bb\endmubyte             % »
+\mubyte \og ^^c2^^ab^^c2^^a0\endmubyte     % « suivi de nbsp
+\mubyte \fg ^^c2^^a0^^c2^^bb\endmubyte     % » précédé de nbsp
+\mubyte \og ^^c2^^ab^^e2^^80^^af\endmubyte % « suivi de nnbsp
+\mubyte \fg ^^e2^^80^^af^^c2^^bb\endmubyte % » précédé de nnbsp
 
 % Petites capitales sans césure pour les noms de famille et autres.
 \font\tencsc=ec-lmcsc10
